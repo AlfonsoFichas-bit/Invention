@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../Invention.UnitTests/Invention.UnitTests.csproj" Id="da9d7866-8a16-4a0b-aeb5-29b7a6365457" />
+  <Project Path="Invention.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Deploy />
+  </Project>
+</Solution>
