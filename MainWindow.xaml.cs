@@ -60,6 +60,11 @@ namespace Invention
 
             var windowHandle = WindowNative.GetWindowHandle(this);
             _appWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(windowHandle));
+            if (_appWindow.Presenter is OverlappedPresenter presenter)
+            {
+                presenter.Maximize();
+            }
+
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
                 _appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
