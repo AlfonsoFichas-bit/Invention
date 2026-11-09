@@ -5,4 +5,5 @@ TestResults/
 AppPackages/
 BundleArtifacts/
 *.user
-*.suo
+*.pfx
+*.cer

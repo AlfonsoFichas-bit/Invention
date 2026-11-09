@@ -81,7 +81,7 @@
                     </Button>
 
                     <TextBlock x:Name="LibraryHeading" Text="Añadidos recientemente" FontSize="22" FontWeight="SemiBold" Margin="0,26,0,2" />
-                    <TextBlock x:Name="EmptyLibraryState" Text="Tu biblioteca está vacía. Añade archivos CBR para empezar." Foreground="#D0D7E2" FontSize="15" Visibility="Collapsed" Margin="0,8,0,8" />
+                    <TextBlock x:Name="EmptyLibraryState" Text="Tu biblioteca está vacía. Añade archivos CBR o CBZ para empezar." Foreground="#D0D7E2" FontSize="15" Visibility="Collapsed" Margin="0,8,0,8" />
                     <ItemsControl x:Name="LibraryItemsControl" HorizontalAlignment="Center" ItemsSource="{x:Bind FilteredLibraryComics, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -98,7 +98,7 @@
                                     </Button.ContextFlyout>
                                     <Grid Width="190" Height="292">
                                         <Border Background="#66353A43" CornerRadius="8" />
-                                        <TextBlock Text="CBR" FontSize="28" FontWeight="SemiBold" Foreground="#90FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Bind FormatLabel}" FontSize="28" FontWeight="SemiBold" Foreground="#90FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <Image Source="{x:Bind CoverImage, Mode=OneWay}" Stretch="UniformToFill" />
                                         <Border VerticalAlignment="Bottom" Background="#D0181A20" Padding="12,10">
                                             <StackPanel Spacing="4">
@@ -119,7 +119,7 @@
         </Grid>
 
         <Grid x:Name="ReaderView" Grid.Row="1" Margin="12" Visibility="Collapsed">
-            <TextBlock x:Name="EmptyState" Text="Abre un archivo .cbr para empezar a leer" Foreground="#D0D0D5" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock x:Name="EmptyState" Text="Abre un archivo .cbr o .cbz para empezar a leer" Foreground="#D0D0D5" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <ScrollViewer x:Name="PageScrollViewer" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Collapsed" ViewChanged="PageScrollViewer_ViewChanged" SizeChanged="PageScrollViewer_SizeChanged" PointerWheelChanged="PageScrollViewer_PointerWheelChanged">
                 <Image x:Name="PageImage" Stretch="Fill" />
             </ScrollViewer>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -9,15 +9,15 @@
   IgnorableNamespaces="uap rescap systemai">
 
   <Identity
-    Name="6d8d4f0e-87ce-4a4d-b921-08fb3131a516"
-    Publisher="CN=alfon"
+    Name="AlfonsoFichas-bit.Invention"
+    Publisher="CN=AlfonsoFichas-bit"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="6d8d4f0e-87ce-4a4d-b921-08fb3131a516" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Invention</DisplayName>
-    <PublisherDisplayName>alfon</PublisherDisplayName>
+    <PublisherDisplayName>AlfonsoFichas-bit</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

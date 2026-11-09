@@ -325,6 +325,7 @@ namespace Invention
         {
             var picker = new FileOpenPicker();
             picker.FileTypeFilter.Add(".cbr");
+            picker.FileTypeFilter.Add(".cbz");
             InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(this));
 
             var files = await picker.PickMultipleFilesAsync();

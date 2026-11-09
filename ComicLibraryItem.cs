@@ -14,6 +14,7 @@ public sealed class ComicLibraryItem : INotifyPropertyChanged
     public string Path { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
+    public string FormatLabel => System.IO.Path.GetExtension(Path).TrimStart('.').ToUpperInvariant();
     public long AddedUtc { get; set; }
     public long? LastOpenedUtc { get; set; }
     public int LastReadPage { get; set; }
