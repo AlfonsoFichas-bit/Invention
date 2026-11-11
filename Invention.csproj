@@ -9,11 +9,7 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
-    <!-- By default, unpackaged and self-contained for portable & Scoop distribution -->
-    <WindowsPackageType Condition="'$(WindowsPackageType)' == ''">None</WindowsPackageType>
-    <WindowsAppSDKSelfContained Condition="'$(WindowsPackageType)' == 'None'">true</WindowsAppSDKSelfContained>
-    <EnableMsixTooling Condition="'$(WindowsPackageType)' == 'MSIX'">true</EnableMsixTooling>
-    <EnableMsixTooling Condition="'$(WindowsPackageType)' != 'MSIX'">false</EnableMsixTooling>
+    <EnableMsixTooling>true</EnableMsixTooling>
     <WinUISDKReferences>false</WinUISDKReferences>
     <Nullable>enable</Nullable>
   </PropertyGroup>
