@@ -85,7 +85,7 @@
                     <ItemsControl x:Name="LibraryItemsControl" HorizontalAlignment="Center" ItemsSource="{x:Bind FilteredLibraryComics, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4" ItemWidth="214" ItemHeight="316" HorizontalAlignment="Center" />
+                                <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4" ItemWidth="310" ItemHeight="450" HorizontalAlignment="Center" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
@@ -96,7 +96,7 @@
                                             <MenuFlyoutItem Text="Quitar de la biblioteca" Tag="{x:Bind Id}" Click="RemoveComicMenuItem_Click" />
                                         </MenuFlyout>
                                     </Button.ContextFlyout>
-                                    <Grid Width="190" Height="292">
+                                    <Grid Width="280" Height="420">
                                         <Border Background="#66353A43" CornerRadius="8" />
                                         <TextBlock Text="{x:Bind FormatLabel}" FontSize="28" FontWeight="SemiBold" Foreground="#90FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <Image Source="{x:Bind CoverImage, Mode=OneWay}" Stretch="UniformToFill" />
