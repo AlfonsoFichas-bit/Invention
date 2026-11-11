@@ -147,5 +147,43 @@
                 </StackPanel>
             </Grid>
         </Border>
+
+        <!-- Botones de ventana flotantes (solo visibles en pantalla completa, al acercar el mouse a la esquina superior derecha) -->
+        <StackPanel x:Name="FullScreenCaptionArea" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Vertical" Visibility="Collapsed" Background="Transparent" PointerEntered="FullScreenCaptionArea_PointerEntered" PointerExited="FullScreenCaptionArea_PointerExited">
+            <StackPanel.Resources>
+                <Style x:Key="CaptionButtonStyle" TargetType="Button">
+                    <Setter Property="Width" Value="46" />
+                    <Setter Property="Height" Value="34" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+            </StackPanel.Resources>
+            <Border Width="150" Height="12" Background="Transparent" />
+            <StackPanel x:Name="FullScreenCaptionButtons" Orientation="Horizontal" Visibility="Collapsed">
+                <StackPanel.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#20FFFFFF" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#40FFFFFF" />
+                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+                </StackPanel.Resources>
+                <Button x:Name="CaptionMinimizeButton" Style="{StaticResource CaptionButtonStyle}" Click="CaptionMinimizeButton_Click" ToolTipService.ToolTip="Minimizar">
+                    <FontIcon Glyph="&#xE921;" FontSize="10" Foreground="#FFFFFF" />
+                </Button>
+                <Button x:Name="CaptionWindowButton" Style="{StaticResource CaptionButtonStyle}" Click="CaptionWindowButton_Click" ToolTipService.ToolTip="Volver al modo ventana">
+                    <FontIcon Glyph="&#xE8A9;" FontSize="10" Foreground="#FFFFFF" />
+                </Button>
+                <Button x:Name="CaptionCloseButton" Style="{StaticResource CaptionButtonStyle}" Click="CaptionCloseButton_Click" ToolTipService.ToolTip="Cerrar">
+                    <Button.Resources>
+                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#E81123" />
+                        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#F1707A" />
+                        <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+                    </Button.Resources>
+                    <FontIcon Glyph="&#xE8BB;" FontSize="10" Foreground="#FFFFFF" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

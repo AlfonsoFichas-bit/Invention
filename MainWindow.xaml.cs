@@ -44,6 +44,7 @@ namespace Invention
         private float _zoomFactor = 1f;
         private bool _isInitialized;
         private bool _isSyncingZoom;
+        private bool _wasFullScreenBeforeMinimize;
         private string _desktopWallpaperPath = string.Empty;
 
         public ObservableCollection<ComicLibraryItem> LibraryComics { get; } = new();
@@ -60,10 +61,10 @@ namespace Invention
 
             var windowHandle = WindowNative.GetWindowHandle(this);
             _appWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(windowHandle));
-            if (_appWindow.Presenter is OverlappedPresenter presenter)
-            {
-                presenter.Maximize();
-            }
+            // Pantalla completa real: sin barra de título ni barra de tareas (a diferencia de Maximize).
+            _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+            UpdateFullScreenChrome();
+            Activated += MainWindow_Activated;
 
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
@@ -133,7 +134,10 @@ namespace Invention
         {
             if (AppWindowTitleBar.IsCustomizationSupported() && RootGrid.XamlRoot is not null)
             {
-                TitleBarRightInset.Width = _appWindow.TitleBar.RightInset / RootGrid.XamlRoot.RasterizationScale;
+                // En pantalla completa RightInset puede ser negativo (no hay botones de caption del
+                // sistema) y FrameworkElement.Width no acepta valores negativos: se acota a 0+.
+                var rightInset = _appWindow.TitleBar.RightInset / RootGrid.XamlRoot.RasterizationScale;
+                TitleBarRightInset.Width = double.IsFinite(rightInset) && rightInset > 0 ? rightInset : 0;
             }
         }
 
@@ -753,6 +757,13 @@ namespace Invention
 
         private async void RootGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (e.Key == VirtualKey.F11)
+            {
+                ToggleFullScreen();
+                e.Handled = true;
+                return;
+            }
+
             if (PageNumberBox.FocusState != FocusState.Unfocused)
             {
                 return;
@@ -767,6 +778,89 @@ namespace Invention
             {
                 await NavigateAsync(1);
                 e.Handled = true;
+            }
+        }
+
+        private void ToggleFullScreen()
+        {
+            if (IsFullScreen)
+            {
+                // Vuelve a la ventana normal maximizada.
+                _appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                if (_appWindow.Presenter is OverlappedPresenter presenter)
+                {
+                    presenter.Maximize();
+                }
+            }
+            else
+            {
+                _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+            }
+
+            UpdateFullScreenChrome();
+        }
+
+        private bool IsFullScreen => _appWindow.Presenter is not null && _appWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen;
+
+        private void UpdateFullScreenChrome()
+        {
+            FullScreenCaptionArea.Visibility = IsFullScreen ? Visibility.Visible : Visibility.Collapsed;
+            if (!IsFullScreen)
+            {
+                FullScreenCaptionButtons.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void FullScreenCaptionArea_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            FullScreenCaptionButtons.Visibility = Visibility.Visible;
+        }
+
+        private void FullScreenCaptionArea_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            FullScreenCaptionButtons.Visibility = Visibility.Collapsed;
+        }
+
+        private void CaptionMinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsFullScreen)
+            {
+                // El presenter FullScreen no admite minimizar: se pasa temporalmente a ventana maximizada
+                // y al restaurar desde la barra de tareas se vuelve a pantalla completa automáticamente.
+                _wasFullScreenBeforeMinimize = true;
+                _appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                if (_appWindow.Presenter is OverlappedPresenter overlapped)
+                {
+                    overlapped.Maximize();
+                }
+                UpdateFullScreenChrome();
+            }
+
+            if (_appWindow.Presenter is OverlappedPresenter presenter)
+            {
+                presenter.Minimize();
+            }
+        }
+
+        private void CaptionWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleFullScreen();
+        }
+
+        private void CaptionCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (_wasFullScreenBeforeMinimize
+                && args.WindowActivationState != WindowActivationState.Deactivated
+                && !IsFullScreen)
+            {
+                _wasFullScreenBeforeMinimize = false;
+                _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                UpdateFullScreenChrome();
             }
         }
 
