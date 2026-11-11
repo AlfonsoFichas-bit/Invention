@@ -45,6 +45,7 @@ namespace Invention
         private bool _isInitialized;
         private bool _isSyncingZoom;
         private bool _wasFullScreenBeforeMinimize;
+        private bool _pendingFullScreenStart;
         private string _desktopWallpaperPath = string.Empty;
 
         public ObservableCollection<ComicLibraryItem> LibraryComics { get; } = new();
@@ -62,7 +63,10 @@ namespace Invention
             var windowHandle = WindowNative.GetWindowHandle(this);
             _appWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(windowHandle));
             // Pantalla completa real: sin barra de título ni barra de tareas (a diferencia de Maximize).
-            _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+            // SetPresenter(FullScreen) solo es válido con la ventana ya activada: se aplica en
+            // MainWindow_Activated al primer Activated (si se llama en el constructor, la app
+            // crashea al arrancar con fail-fast E_INVALIDARG en CoreMessagingXP).
+            _pendingFullScreenStart = true;
             UpdateFullScreenChrome();
             Activated += MainWindow_Activated;
 
@@ -854,6 +858,20 @@ namespace Invention
 
         private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
         {
+            if (_pendingFullScreenStart
+                && args.WindowActivationState != WindowActivationState.Deactivated)
+            {
+                _pendingFullScreenStart = false;
+                // SetPresenter(FullScreen) crashea (fail-fast E_INVALIDARG) si se llama
+                // mientras la ventana aún se está activando; se aplaza al siguiente
+                // ciclo del dispatcher, cuando Activate() ya ha terminado.
+                Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
+                {
+                    _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                    UpdateFullScreenChrome();
+                });
+            }
+
             if (_wasFullScreenBeforeMinimize
                 && args.WindowActivationState != WindowActivationState.Deactivated
                 && !IsFullScreen)

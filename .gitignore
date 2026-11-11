@@ -7,3 +7,5 @@ BundleArtifacts/
 *.user
 *.pfx
 *.cer
+dist/
+*.zip
