@@ -129,7 +129,9 @@
             <Grid ColumnDefinitions="*,Auto,*">
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
                     <Button x:Name="PreviousButton" Content="‹" FontSize="24" Padding="10,0" IsEnabled="False" Click="PreviousButton_Click" ToolTipService.ToolTip="Página anterior" />
-                    <TextBlock x:Name="PageLabel" Text="0 / 0" MinWidth="70" TextAlignment="Center" VerticalAlignment="Center" Foreground="#E5E5EA" />
+                    <TextBox x:Name="PageNumberBox" Text="1" MinWidth="48" TextAlignment="Center" InputScope="Number" IsEnabled="False" BeforeTextChanging="PageNumberBox_BeforeTextChanging" KeyDown="PageNumberBox_KeyDown" LostFocus="PageNumberBox_LostFocus" ToolTipService.ToolTip="Escribe el número de página y pulsa Enter para ir" Padding="8,4" />
+                    <TextBlock Text="/" VerticalAlignment="Center" Foreground="#E5E5EA" />
+                    <TextBlock x:Name="PageTotalLabel" Text="0" MinWidth="32" TextAlignment="Left" VerticalAlignment="Center" Foreground="#E5E5EA" />
                     <Button x:Name="NextButton" Content="›" FontSize="24" Padding="10,0" IsEnabled="False" Click="NextButton_Click" ToolTipService.ToolTip="Página siguiente" />
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="8">

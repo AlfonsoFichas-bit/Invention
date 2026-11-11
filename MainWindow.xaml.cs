@@ -732,7 +732,13 @@ namespace Invention
         {
             PreviousButton.IsEnabled = _currentPageIndex > 0;
             NextButton.IsEnabled = _currentPageIndex < _pages.Count - 1;
-            PageLabel.Text = _pages.Count == 0 ? "0 / 0" : $"{_currentPageIndex + 1} / {_pages.Count}";
+            PageTotalLabel.Text = _pages.Count.ToString();
+
+            PageNumberBox.IsEnabled = _pages.Count > 0;
+            if (PageNumberBox.FocusState == FocusState.Unfocused)
+            {
+                PageNumberBox.Text = _pages.Count == 0 ? "1" : (_currentPageIndex + 1).ToString();
+            }
         }
 
         private async void PreviousButton_Click(object sender, RoutedEventArgs e)
@@ -747,6 +753,11 @@ namespace Invention
 
         private async void RootGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (PageNumberBox.FocusState != FocusState.Unfocused)
+            {
+                return;
+            }
+
             if (e.Key == VirtualKey.Left)
             {
                 await NavigateAsync(-1);
@@ -761,13 +772,66 @@ namespace Invention
 
         private async Task NavigateAsync(int offset)
         {
-            var nextPageIndex = _currentPageIndex + offset;
-            if (nextPageIndex < 0 || nextPageIndex >= _pages.Count)
+            await GoToPageAsync(_currentPageIndex + offset, alreadyZeroBased: true);
+        }
+
+        private async void PageNumberBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            if (!System.Text.RegularExpressions.Regex.IsMatch(args.NewText, @"^\d*$"))
             {
+                args.Cancel = true;
+            }
+        }
+
+        private async void PageNumberBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                e.Handled = true;
+                await CommitPageNumberAsync();
+            }
+        }
+
+        private async void PageNumberBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            await CommitPageNumberAsync();
+        }
+
+        private async Task CommitPageNumberAsync()
+        {
+            if (_pages.Count == 0)
+            {
+                PageNumberBox.Text = "1";
                 return;
             }
 
-            _currentPageIndex = nextPageIndex;
+            var text = PageNumberBox.Text.Trim();
+            if (!int.TryParse(text, out var pageNumber))
+            {
+                PageNumberBox.Text = (_currentPageIndex + 1).ToString();
+                return;
+            }
+
+            PageNumberBox.Text = pageNumber.ToString();
+            await GoToPageAsync(pageNumber);
+        }
+
+        private async Task GoToPageAsync(int page, bool alreadyZeroBased = false)
+        {
+            var nextPageIndex = alreadyZeroBased ? page : page - 1;
+            if (_pages.Count == 0 || nextPageIndex == _currentPageIndex)
+            {
+                PageNumberBox.Text = _pages.Count == 0 ? "1" : (_currentPageIndex + 1).ToString();
+                return;
+            }
+
+            var clamped = Math.Clamp(nextPageIndex, 0, _pages.Count - 1);
+            if (clamped != nextPageIndex)
+            {
+                PageNumberBox.Text = (clamped + 1).ToString();
+            }
+
+            _currentPageIndex = clamped;
             if (_comicFile is not null)
             {
                 _libraryRepository.UpdateLastReadPage(_comicFile.Path, _currentPageIndex);
