@@ -9,3 +9,5 @@ BundleArtifacts/
 *.cer
 dist/
 *.zip
+
+.agents/
