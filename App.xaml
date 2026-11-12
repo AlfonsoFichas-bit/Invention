@@ -10,7 +10,51 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="RootGridBackgroundBrush" Color="#28000000" />
+                    <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="#C0181A1D" />
+                    <SolidColorBrush x:Key="NavigationPaneBackgroundBrush" Color="#A0161A20" />
+                    <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#A0161A20" />
+                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#A0161A20" />
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#D0D7E2" />
+                    <SolidColorBrush x:Key="TextMutedBrush" Color="#B8C2D3" />
+                    <SolidColorBrush x:Key="CardFooterBackgroundBrush" Color="#D0181A20" />
+                    <SolidColorBrush x:Key="CardPlaceholderBackgroundBrush" Color="#66353A43" />
+                    <SolidColorBrush x:Key="ReaderFooterBackgroundBrush" Color="#C0181A1D" />
+                    <SolidColorBrush x:Key="CaptionButtonForegroundBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="CaptionButtonHoverBackgroundBrush" Color="#20FFFFFF" />
+                    <SolidColorBrush x:Key="CaptionButtonPressedBackgroundBrush" Color="#40FFFFFF" />
+                    <LinearGradientBrush x:Key="WallpaperOverlayBrush" StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#C80E1116" Offset="0.0" />
+                        <GradientStop Color="#880E1116" Offset="0.45" />
+                        <GradientStop Color="#D00B0E14" Offset="1.0" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="RootGridBackgroundBrush" Color="#08000000" />
+                    <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="#E6FFFFFF" />
+                    <SolidColorBrush x:Key="NavigationPaneBackgroundBrush" Color="#E0F3F4F6" />
+                    <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#E0F3F4F6" />
+                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#E0F3F4F6" />
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#111827" />
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#374151" />
+                    <SolidColorBrush x:Key="TextMutedBrush" Color="#4B5563" />
+                    <SolidColorBrush x:Key="CardFooterBackgroundBrush" Color="#F2FFFFFF" />
+                    <SolidColorBrush x:Key="CardPlaceholderBackgroundBrush" Color="#20000000" />
+                    <SolidColorBrush x:Key="ReaderFooterBackgroundBrush" Color="#E6FFFFFF" />
+                    <SolidColorBrush x:Key="CaptionButtonForegroundBrush" Color="#111827" />
+                    <SolidColorBrush x:Key="CaptionButtonHoverBackgroundBrush" Color="#15000000" />
+                    <SolidColorBrush x:Key="CaptionButtonPressedBackgroundBrush" Color="#30000000" />
+                    <LinearGradientBrush x:Key="WallpaperOverlayBrush" StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#E6FFFFFF" Offset="0.0" />
+                        <GradientStop Color="#90FFFFFF" Offset="0.45" />
+                        <GradientStop Color="#E0FFFFFF" Offset="1.0" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -70,11 +70,7 @@ namespace Invention
             UpdateFullScreenChrome();
             Activated += MainWindow_Activated;
 
-            if (AppWindowTitleBar.IsCustomizationSupported())
-            {
-                _appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-                _appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            }
+            UpdateTitleBarTheme(IsDarkTheme);
 
             RootGrid.Loaded += RootGrid_Loaded;
             RootGrid.SizeChanged += RootGrid_SizeChanged;
@@ -90,9 +86,30 @@ namespace Invention
             RootGrid.Focus(FocusState.Programmatic);
         }
 
+        private bool IsDarkTheme
+        {
+            get
+            {
+                if (RootGrid?.ActualTheme == ElementTheme.Dark) return true;
+                if (RootGrid?.ActualTheme == ElementTheme.Light) return false;
+                if (Application.Current?.RequestedTheme == ApplicationTheme.Dark) return true;
+                if (Application.Current?.RequestedTheme == ApplicationTheme.Light) return false;
+                try
+                {
+                    var bg = new Windows.UI.ViewManagement.UISettings().GetColorValue(Windows.UI.ViewManagement.UIColorType.Background);
+                    return ((5 * bg.G) + (2 * bg.R) + bg.B) <= (8 * 128);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         private async void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateTitleBarInsets();
+            UpdateTitleBarTheme(IsDarkTheme);
             await UpdateLogoThemeAsync();
             await UpdateDesktopWallpaperAsync();
             await RefreshLibraryAsync();
@@ -100,16 +117,62 @@ namespace Invention
 
         private async void RootGrid_ActualThemeChanged(FrameworkElement sender, object args)
         {
+            UpdateTitleBarTheme(IsDarkTheme);
             await UpdateLogoThemeAsync();
+        }
+
+        private void UpdateTitleBarTheme(bool isDarkTheme)
+        {
+            if (!AppWindowTitleBar.IsCustomizationSupported())
+            {
+                return;
+            }
+
+            var titleBar = _appWindow.TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            if (isDarkTheme)
+            {
+                titleBar.ButtonForegroundColor = Colors.White;
+                titleBar.ButtonHoverForegroundColor = Colors.White;
+                titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(32, 255, 255, 255);
+                titleBar.ButtonPressedForegroundColor = Colors.White;
+                titleBar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(48, 255, 255, 255);
+                titleBar.ButtonInactiveForegroundColor = Windows.UI.Color.FromArgb(120, 255, 255, 255);
+            }
+            else
+            {
+                titleBar.ButtonForegroundColor = Windows.UI.Color.FromArgb(255, 30, 30, 30);
+                titleBar.ButtonHoverForegroundColor = Colors.Black;
+                titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 0, 0, 0);
+                titleBar.ButtonPressedForegroundColor = Colors.Black;
+                titleBar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(40, 0, 0, 0);
+                titleBar.ButtonInactiveForegroundColor = Windows.UI.Color.FromArgb(120, 0, 0, 0);
+            }
         }
 
         private async Task UpdateLogoThemeAsync()
         {
-            var isDarkTheme = RootGrid.ActualTheme == ElementTheme.Dark;
+            var isDark = IsDarkTheme;
             var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///logo.svg"));
             var svg = await FileIO.ReadTextAsync(logoFile);
-            var fill = isDarkTheme ? "#FFFFFF" : "#000000";
-            svg = svg.Replace(".cls-1{fill:#000000}", $".cls-1{{fill:{fill}}}", StringComparison.Ordinal);
+            var fill = isDark ? "#FFFFFF" : "#000000";
+
+            // En Direct2D/WinUI 3 SvgImageSource no evalúa bloques <style> CSS,
+            // por lo que los paths sin atributo 'fill' directo se renderizan en negro por defecto.
+            // Sustituimos class="cls-1" por el atributo fill directo en cada elemento <path>.
+            svg = System.Text.RegularExpressions.Regex.Replace(
+                svg,
+                @"class=""cls-1""",
+                $"fill=\"{fill}\"",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            svg = System.Text.RegularExpressions.Regex.Replace(
+                svg,
+                @"\.cls-1\s*\{\s*fill\s*:\s*#[0-9a-fA-F]{3,6}\s*\}",
+                $".cls-1{{fill:{fill}}}",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
             using var stream = new InMemoryRandomAccessStream();
             using (var writer = new DataWriter(stream))
@@ -124,7 +187,7 @@ namespace Invention
             await imageSource.SetSourceAsync(stream);
             LogoImage.Source = imageSource;
 
-            var iconFileName = isDarkTheme ? "InventionDark.ico" : "InventionLight.ico";
+            var iconFileName = isDark ? "InventionDark.ico" : "InventionLight.ico";
             var iconFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/{iconFileName}"));
             _appWindow.SetIcon(iconFile.Path);
         }
