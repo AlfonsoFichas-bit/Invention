@@ -1,12 +1,12 @@
 ﻿{
-    "version": "0.1",
+    "version": "0.2",
     "description": "Modern comic book reader for Windows built with WinUI 3",
     "homepage": "https://github.com/AlfonsoFichas-bit/Invention",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/AlfonsoFichas-bit/Invention/releases/download/v0.1/Invention-v1.0.0-win-x64.zip",
-            "hash": "7f5cb8631fe0a2f5202d9c667bbf2579f5bc4f9e73030f3f6b66ca72d9b74b9b"
+            "url": "https://github.com/AlfonsoFichas-bit/Invention/releases/download/v0.2/Invention-v0.2-win-x64.zip",
+            "hash": "804b27cc7f5b31e5b57f5273b6f7138a9eb8ec198f91955ae1bb0e5840bdb1b1"
         }
     },
     "bin": [
